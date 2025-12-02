@@ -1,12 +1,6 @@
 # render.yaml — FULLY WORKING FOR YOUR TAKE-HOME
 services:
-  # ——— PostgreSQL Database ———
-  - type: postgres
-    name: acme-db
-    region: frankfurt
-    plan: free
-    ipAllowList: []  # Allow all (we use connection string)
-
+  
   # ——— BACKEND: NestJS + better-auth ———
   - type: web
     name: acme-backend
