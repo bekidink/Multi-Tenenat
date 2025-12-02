@@ -1,7 +1,7 @@
 # render.yaml — FULLY WORKING FOR YOUR TAKE-HOME
 services:
   # ——— PostgreSQL Database ———
-  - type: pgsql
+  - type: postgres
     name: acme-db
     region: frankfurt
     plan: free
