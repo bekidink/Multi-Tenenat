@@ -15,7 +15,7 @@ services:
       npx prisma generate
       
       # Run database migrations
-      npx prisma migrate deploy
+      npx prisma db push --force-reset
       
       # Build the NestJS application
       npm run build
