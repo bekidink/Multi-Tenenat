@@ -43,8 +43,4 @@ services:
       # This tells better-auth client where to find the backend
       NEXT_PUBLIC_BETTER_AUTH_URL: https://acme-backend.onrender.com
 
-  # ——— OPTIONAL: Redirect all to frontend (not needed, but clean) ———
-  - type: redirect
-    name: www-redirect
-    source: https://www.acme-takehome.onrender.com
-    destination: https://acme-takehome.onrender.com
+ 
