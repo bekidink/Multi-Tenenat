@@ -24,11 +24,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
-
+import { toast } from "sonner";
 
 const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().min(1,"Email is required"),
+  email: z.string().min(1, "Email is required"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -56,12 +56,18 @@ export default function SignUp() {
   const onSubmit = async (values: SignUpFormValues) => {
     setLoading(true);
     try {
-      await authClient.signUp.email({
+      const res = await authClient.signUp.email({
         name: values.name,
         email: values.email,
         password: values.password,
       });
-      router.push("/create-organization");
+      if (res?.error) {
+        toast.error(res?.error.message || "Invalid email or password");
+      } else {
+        toast.success("User created Successfully");
+
+        router.push("/create-organization");
+      }
     } catch (err: any) {
       form.setError("root", {
         message: err.message || "Failed to create account. Please try again.",
@@ -160,9 +166,7 @@ export default function SignUp() {
                 type="submit"
                 size="lg"
                 className="w-full h-12 text-base font-semibold"
-                disabled={
-                  loading 
-                }
+                disabled={loading}
               >
                 {loading ? (
                   <>

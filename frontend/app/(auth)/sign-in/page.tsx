@@ -26,9 +26,8 @@ import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-
 const signInSchema = z.object({
-  email: z.string().min(1,"Email is required"),
+  email: z.string().min(1, "Email is required"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -49,14 +48,18 @@ export default function SignIn() {
   const onSubmit = async (values: SignInFormValues) => {
     setLoading(true);
     try {
-      await authClient.signIn.email({
+      const res = await authClient.signIn.email({
         email: values.email,
         password: values.password,
       });
-toast.success("Logged in successfully")
-      // Refresh session + redirect
-      router.refresh();
-      setTimeout(() => router.push("/dashboard"), 100);
+      if (res?.error) {
+        toast.error(res?.error.message || "Invalid email or password");
+      } else {
+        toast.success("Logged in successfully");
+        // Refresh session + redirect
+        router.refresh();
+        setTimeout(() => router.push("/dashboard"), 100);
+      }
     } catch (err: any) {
       form.setError("root", {
         message: err.message || "Invalid email or password",

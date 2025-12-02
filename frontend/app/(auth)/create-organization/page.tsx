@@ -60,12 +60,17 @@ export default function CreateOrg() {
     
 
     try {
-      await authClient.organization.create({
+   const res=   await authClient.organization.create({
         name: values.name,
         slug: values.slug,
       });
-      router.push("/dashboard");
-      toast.success("Your Organization created sussfully")
+      if (res?.error) {
+        toast.error(res?.error.message || "Invalid email or password");
+      } else {
+        router.push("/dashboard");
+        toast.success("Your Organization created sussfully");
+      }
+      
     } catch (err: any) {
       toast.error("An error occurred while creating the organization");
     } finally {

@@ -35,8 +35,7 @@ services:
         sync: false  # Set this manually
       - key: SMTP_PASS
         sync: false  # Set this manually
-      - key: PORT
-        value: 10000
+      
 
   # ——— FRONTEND: Next.js App Router ———
   - type: web
