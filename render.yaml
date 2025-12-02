@@ -9,7 +9,7 @@ services:
       cd backend
       
       # Install all dependencies (including dev dependencies)
-      npm install --production=false
+      npm ci --production=false
       
       # Generate Prisma client
       npx prisma generate
