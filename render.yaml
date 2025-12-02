@@ -1,6 +1,4 @@
-# render.yaml — FULLY WORKING FOR YOUR TAKE-HOME
 services:
-  
   # ——— BACKEND: NestJS + better-auth ———
   - type: web
     name: acme-backend
@@ -8,25 +6,37 @@ services:
     region: frankfurt
     plan: free
     buildCommand: |
-      
       cd backend
-      npm install
+      
+      # Install all dependencies (including dev dependencies)
+      npm install --production=false
+      
+      # Generate Prisma client
+      npx prisma generate
+      
+      # Run database migrations
+      npx prisma migrate deploy
+      
+      # Build the NestJS application
       npm run build
+      
     startCommand: cd backend && npm run start:prod
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
-        generateValue: true  # Set in dashboard (secret)
+        generateValue: true
+      - key: DIRECT_URL
+        generateValue: true
       - key: NODE_ENV
-        generateValue: true 
+        value: production
       - key: NEXT_PUBLIC_APP_URL
-        generateValue: true 
+        sync: false  # Set this manually to your Render backend URL
       - key: SMTP_USER
-        generateValue: true 
+        sync: false  # Set this manually
       - key: SMTP_PASS
-        generateValue: true   # ← Set your 16-digit Gmail App Password in Render Dashboard (secret)
+        sync: false  # Set this manually
       - key: PORT
-        generateValue: true 
+        value: 10000
 
   # ——— FRONTEND: Next.js App Router ———
   - type: web
@@ -40,12 +50,9 @@ services:
       npm run build
     startCommand: cd frontend && npm run start
     envVars:
-       - key: NODE_ENV
-         generateValue: true 
-       - key: NEXT_PUBLIC_APP_URL
-         generateValue: true 
-      # This tells better-auth client where to find the backend
-       - key: NEXT_PUBLIC_BETTER_AUTH_URL
-         generateValue: true 
-
- 
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_APP_URL
+        value: https://acme-backend.onrender.com  # Your backend URL
+      - key: NEXT_PUBLIC_BETTER_AUTH_URL
+        value: https://acme-backend.onrender.com  # Same as backend URL
