@@ -15,16 +15,18 @@ services:
     startCommand: cd backend && npm run start:prod
     healthCheckPath: /health
     envVars:
-      DATABASE_URL:
-        fromDatabase:
-          name: acme-db
-          property: connectionString
-      NODE_ENV: production
-      NEXT_PUBLIC_APP_URL: https://acme-takehome.onrender.com
-      SMTP_USER: bereketdinku876@gmail.com
-      SMTP_PASS:
+      - key: DATABASE_URL
+        generateValue: true  # Set in dashboard (secret)
+      - key: NODE_ENV
+        generateValue: true 
+      - key: NEXT_PUBLIC_APP_URL
+        generateValue: true 
+      - key: SMTP_USER
+        generateValue: true 
+      - key: SMTP_PASS
         generateValue: true   # ← Set your 16-digit Gmail App Password in Render Dashboard (secret)
-      PORT: 10000
+      - key: PORT
+        generateValue: true 
 
   # ——— FRONTEND: Next.js App Router ———
   - type: web
@@ -38,9 +40,12 @@ services:
       npm run build
     startCommand: cd frontend && npm run start
     envVars:
-      NODE_ENV: production
-      NEXT_PUBLIC_APP_URL: https://acme-takehome.onrender.com
+       - key: NODE_ENV
+         generateValue: true 
+       - key: NEXT_PUBLIC_APP_URL
+         generateValue: true 
       # This tells better-auth client where to find the backend
-      NEXT_PUBLIC_BETTER_AUTH_URL: https://acme-backend.onrender.com
+       - key: NEXT_PUBLIC_BETTER_AUTH_URL
+         generateValue: true 
 
  
