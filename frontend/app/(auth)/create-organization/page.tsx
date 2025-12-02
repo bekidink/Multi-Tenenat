@@ -65,7 +65,7 @@ export default function CreateOrg() {
         slug: values.slug,
       });
       if (res?.error) {
-        toast.error(res?.error.message || "Invalid email or password");
+        toast.error(res?.error.message || "Something went wrong");
       } else {
         router.push("/dashboard");
         toast.success("Your Organization created sussfully");

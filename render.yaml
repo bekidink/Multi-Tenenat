@@ -52,6 +52,6 @@ services:
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_APP_URL
-        value: https://acme-backend.onrender.com  # Your backend URL
+        value: https://acme-backend-jl77.onrender.com/api/v1  # Your backend URL
       - key: NEXT_PUBLIC_BETTER_AUTH_URL
-        value: https://acme-backend.onrender.com  # Same as backend URL
+        value: https://acme-backend-jl77.onrender.com/api/auth  # Same as backend URL
