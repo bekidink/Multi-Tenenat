@@ -49,9 +49,8 @@ export const auth = betterAuth({
   trustedOrigins: [
     'http://localhost:5001',
     'http://localhost:7000',
-    process.env.FRONT_END_URL!,
-    'https://acme-takehome.onrender.com',
     'https://acme-backend-jl77.onrender.com',
+    'https://acme-takehome.onrender.com',
   ],
   emailAndPassword: { enabled: true },
   session: { expiresIn: 60 * 60 * 24 * 7 },
