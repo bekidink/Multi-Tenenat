@@ -92,7 +92,7 @@ export function AppSidebar({
                         <div
                           className={`p-1.5 rounded ${
                             active
-                              ? "bg-blue-100 text-blue-600"
+                              ? "bg-custom text-blue-600"
                               : "bg-gray-100 text-gray-600"
                           }`}
                         >

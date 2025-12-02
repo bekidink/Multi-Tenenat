@@ -9,12 +9,9 @@ interface Props {
 export default function OutlineTableHeader({ onAdd }: Props) {
   return (
     <div className="flex items-center justify-between">
-      <div>
-        <h2 className="text-2xl font-bold">Outline</h2>
-        <p className="text-muted-foreground">Manage your project sections</p>
-      </div>
-      <Button onClick={onAdd} className="gap-2">
-        <Plus className="h-4 w-4" />
+      
+      <Button onClick={onAdd} className="gap-2 bg-white text-black">
+        <Plus className="h-4 w-4 " color="black" />
         Add Section
       </Button>
     </div>

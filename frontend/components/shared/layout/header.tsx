@@ -44,7 +44,7 @@ export default function Header({
 
   return (
     <header className="border-b bg-white shadow-sm">
-      <div className="flex items-center justify-end px-4 md:px-6 py-3">
+      <div className="flex items-center justify-end px-4 md:px-6 ">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -56,12 +56,7 @@ export default function Header({
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="hidden md:block text-left">
-                <p className="text-sm font-medium text-gray-900">{userName}</p>
-                <p className="text-xs text-gray-500 truncate max-w-[140px]">
-                  {userEmail}
-                </p>
-              </div>
+              
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">

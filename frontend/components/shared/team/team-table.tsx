@@ -125,7 +125,7 @@ export default function TeamTable({
             Manage roles and permissions
           </p>
         </div>
-        {isOwner && <InviteMemberDialog onSuccess={onRefresh} />}
+       
       </div>
 
       <div className="p-6">
@@ -141,6 +141,9 @@ export default function TeamTable({
           onPageChange={() => {}}
           onPageSizeChange={() => {}}
           showPagination={members.length > 10}
+          headerComponent={
+            isOwner && <InviteMemberDialog onSuccess={onRefresh} />
+          }
         />
       </div>
     </div>

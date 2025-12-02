@@ -5,7 +5,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
+import { PanelLeftIcon } from "lucide-react"
 import {
   Table,
   TableBody,
@@ -27,6 +27,7 @@ import { LoaderCircleIcon, ChevronLeft, ChevronRight, ChevronDown } from "lucide
 import { useState, useCallback } from "react";
 import { VisibilityState } from "@tanstack/react-table";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "./dropdown-menu";
+import { DataTablePagination } from "./data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,6 +51,7 @@ interface DataTableProps<TData, TValue> {
 
   pageSizeOptions?: number[];
   showPagination?: boolean;
+  headerComponent?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -67,6 +69,7 @@ export function DataTable<TData, TValue>({
   onPageSizeChange,
   pageSizeOptions = [5, 10, 20, 50, 100],
   showPagination = true,
+  headerComponent
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [cellSelection, setCellSelection] = useState<
@@ -176,12 +179,13 @@ const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex flex-row justify-end gap-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="h-8">
+              <PanelLeftIcon className="h-4 w-4 mr-2" />
+              Customize Columns
               <ChevronDown className="h-4 w-4 mr-2" />
-              Columns
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -214,10 +218,11 @@ const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        {headerComponent}
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-[#E6EAEE]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -310,62 +315,7 @@ const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
         </Table>
       </div>
 
-      {showPagination && (
-        <div className="flex items-center justify-between px-4 py-3 border-t">
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-muted-foreground">Rows per page</span>
-
-            <Select
-              value={pageSize.toString()}
-              onValueChange={(value) => onPageSizeChange(Number(value))}
-            >
-              <SelectTrigger className="w-[80px] h-8">
-                <SelectValue />
-              </SelectTrigger>
-
-              <SelectContent>
-                {pageSizeOptions.map((size) => (
-                  <SelectItem key={size} value={size.toString()}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-center space-x-6">
-            <span className="text-sm text-muted-foreground">
-              {startRecord}-{endRecord} of {totalCount}
-            </span>
-
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => onPageChange(currentPage - 1)}
-                disabled={!canPreviousPage}
-                className="h-8 w-8"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-
-              <span className="text-sm font-medium min-w-[100px] text-center">
-                Page {currentPage} of {totalPages}
-              </span>
-
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => onPageChange(currentPage + 1)}
-                disabled={!canNextPage}
-                className="h-8 w-8"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DataTablePagination table={table} />
     </div>
   );
 }

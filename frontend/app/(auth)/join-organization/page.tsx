@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth";
 import { toast } from "sonner";
-
-export default function JoinOrg() {
+import { Suspense } from "react";
+ function JoinOrg() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
@@ -39,3 +39,10 @@ export default function JoinOrg() {
     </div>
   );
 }
+export default function JoinOrganization() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <JoinOrg />
+    </Suspense>
+  )}

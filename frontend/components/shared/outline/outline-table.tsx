@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { SectionType, StatusType, ReviewerType } from "@/types/enums";
 import { useMemo } from "react";
 import OutlineFormSheet from "./outline-sheet";
+import { CheckCircle2, Circle, Clock, Loader } from "lucide-react";
 
 export interface Outline {
   id: string;
@@ -87,7 +88,11 @@ export default function OutlineTable({ organizationId }: Props) {
           const formatted = value
             .replace(/_/g, " ")
             .replace(/\b\w/g, (c) => c.toUpperCase());
-          return <span className="text-muted-foreground">{formatted}</span>;
+          return (
+            <Badge variant="outline" className=" text-gray-400">
+              {formatted}
+            </Badge>
+          );
         },
       },
       {
@@ -96,19 +101,39 @@ export default function OutlineTable({ organizationId }: Props) {
         enableHiding: true,
         cell: ({ row }) => {
           const status = row.original.status;
-          const colors: Record<StatusType, string> = {
-            [StatusType.Completed]: "bg-green-100 text-green-800",
-            [StatusType.In_Progress]: "bg-yellow-100 text-yellow-800",
-            [StatusType.Pending]: "bg-gray-100 text-gray-800",
-          };
+        
+          
+          // Get status icon and color
+          let Icon;
+          let color;
+          let text;
+          
+          switch (status) {
+            case StatusType.Completed:
+              Icon = CheckCircle2;
+              color = "text-green-600";
+              text = "Done";
+              break;
+            case StatusType.In_Progress:
+              Icon = Loader ;
+              color = "text-gray-400";
+              text = "In Process";
+              break;
+            case StatusType.Pending:
+            default:
+              Icon = Circle;
+              color = "text-gray-400";
+              text = "Pending";
+              break;
+          }
+          
           return (
-            <Badge
-              className={`font-medium ${
-                colors[status] || colors[StatusType.Pending]
-              }`}
+            <div
+              className={`flex w-fit items-center gap-2 font-medium border rounded-lg py-0.5 px-1`}
             >
-              {status.replace("_", " ")}
-            </Badge>
+              <Icon className={`h-4 w-4 ${color}`} />
+              <span className={`font-medium text-gray-400`}>{text}</span>
+            </div>
           );
         },
       },
@@ -118,16 +143,12 @@ export default function OutlineTable({ organizationId }: Props) {
         accessorKey: "reviewer",
         header: "Reviewer",
         enableHiding: true,
-        cell: ({ row }) => (
-          <Badge variant="outline" className="bg-blue-50 text-blue-700">
-            {row.original.reviewer}
-          </Badge>
-        ),
+        
       },
       {
         id: "actions",
         enableHiding: false,
-        header: "Action",
+        
         cell: ({ row }) => (
           <OutlineActionsDropdown
             outline={row.original}
@@ -147,18 +168,21 @@ export default function OutlineTable({ organizationId }: Props) {
 
   return (
     <div className="space-y-6">
-      <OutlineTableHeader onAdd={() => setSheetOpen(true)} />
-
       <DataTable
         columns={columns}
         data={outlines}
         loading={loading}
+        enableRowSelection
+        enableCellSelection
         currentPage={page}
         pageSize={pageSize}
         totalCount={outlines.length}
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
         pageSizeOptions={PAGE_SIZE_OPTIONS}
+        headerComponent={
+          <OutlineTableHeader onAdd={() => setSheetOpen(true)} />
+        }
       />
 
       <OutlineFormSheet
