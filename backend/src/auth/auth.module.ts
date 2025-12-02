@@ -1,0 +1,19 @@
+
+import { Module } from '@nestjs/common';
+import { AuthModule as BetterAuthModule } from '@thallesp/nestjs-better-auth';
+import { auth } from './auth.config';
+import { AuthService } from './auth.service';
+import { PrismaModule } from '../prisma/prisma.module';
+
+@Module({
+  imports: [
+    BetterAuthModule.forRoot({
+      auth,
+    }),
+    PrismaModule,
+  ],
+ 
+  providers: [AuthService],
+  exports: [AuthService],
+})
+export class AuthModule {}

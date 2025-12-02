@@ -1,0 +1,56 @@
+# render.yaml — FULLY WORKING FOR YOUR TAKE-HOME
+services:
+  # ——— PostgreSQL Database ———
+  - type: pgsql
+    name: acme-db
+    region: frankfurt
+    plan: free
+    ipAllowList: []  # Allow all (we use connection string)
+
+  # ——— BACKEND: NestJS + better-auth ———
+  - type: web
+    name: acme-backend
+    env: node
+    region: frankfurt
+    plan: free
+    buildCommand: |
+      npm install
+      cd backend
+      npm install
+      npm run build
+    startCommand: cd backend && npm run start:prod
+    healthCheckPath: /health
+    envVars:
+      DATABASE_URL:
+        fromDatabase:
+          name: acme-db
+          property: connectionString
+      NODE_ENV: production
+      NEXT_PUBLIC_APP_URL: https://acme-takehome.onrender.com
+      SMTP_USER: bereketdinku876@gmail.com
+      SMTP_PASS:
+        generateValue: true   # ← Set your 16-digit Gmail App Password in Render Dashboard (secret)
+      PORT: 10000
+
+  # ——— FRONTEND: Next.js App Router ———
+  - type: web
+    name: acme-takehome
+    env: node
+    region: frankfurt
+    plan: free
+    buildCommand: |
+      cd frontend
+      npm install
+      npm run build
+    startCommand: cd frontend && npm run start
+    envVars:
+      NODE_ENV: production
+      NEXT_PUBLIC_APP_URL: https://acme-takehome.onrender.com
+      # This tells better-auth client where to find the backend
+      NEXT_PUBLIC_BETTER_AUTH_URL: https://acme-backend.onrender.com
+
+  # ——— OPTIONAL: Redirect all to frontend (not needed, but clean) ———
+  - type: redirect
+    name: www-redirect
+    source: https://www.acme-takehome.onrender.com
+    destination: https://acme-takehome.onrender.com

@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/client"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  emailVerified Boolean?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  type    String @default("")
+  accounts    Account[]
+  sessions    Session[]
+  members     Member[]
+  invitations Invitation[]
+  outlines    Outline[]
+
+  
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String  @default("credentials")  // Fixed: non-optional
+  provider          String  @default("")
+  providerAccountId String  @default("")  // Provider's account ID
+  password          String
+  accountId         String  // ← ADDED: Better-Auth's internal field
+  providerId        String  // ← ADDED: Maps to provider
+  accessToken       String?
+  tokenType         String?
+  idToken           String?
+  refreshToken      String?
+  scope             String?
+  expiresAt         Int?
+createdAt         DateTime @default(now())  // ← ADDED: Fixes the error
+  updatedAt         DateTime @updatedAt       // ← ADDED: Auto-updates
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // @@unique([provider, providerAccountId])  // Or [accountId, providerId] if preferred
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  token        String   @unique   // ← rename from sessionToken → token
+  userId       String
+  expiresAt    DateTime
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+activeOrganizationId String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+activeOrganization Organization? @relation(fields: [activeOrganizationId], references: [id])
+  @@map("session")
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  members     Member[]
+  outlines    Outline[]
+  invitations Invitation[]
+
+  sessions Session[]
+}
+
+model Member {
+  id             String @id @default(cuid())
+  userId         String
+  organizationId String
+  role           String // "owner" or "member"
+  createdAt      DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, organizationId])
+}
+
+model Invitation {
+  id             String   @id @default(cuid())
+  email          String
+  organizationId String
+  role           String
+  inviterId      String
+  status         String   @default("pending")
+  expiresAt      DateTime?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  inviter      User         @relation(fields: [inviterId], references: [id])
+}
+
+enum SectionType {
+  Table_of_Contents
+  Executive_Summary
+  Technical_Approach
+  Design
+  Capabilities
+  Focus_Document
+  Narrative
+}
+
+enum StatusType {
+  Pending
+  In_Progress
+  Completed
+}
+
+enum ReviewerType {
+  Assim
+  Bini
+  Mami
+}
+
+model Outline {
+  id             String       @id @default(cuid())
+  header         String
+  sectionType    SectionType
+  status         StatusType   @default(Pending)
+  target         Int?
+  limit          Int?
+  reviewer       ReviewerType?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organizationId String
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  users User[]
+}
