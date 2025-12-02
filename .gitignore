@@ -1,10 +1,4 @@
-# Python
-backend/venv/
-backend/__pycache__/
-backend/*.pyc
-__pycache__/
-*.py[cod]
-*$py.class
+
 
 # Node.js / Next.js
 frontend/node_modules/
