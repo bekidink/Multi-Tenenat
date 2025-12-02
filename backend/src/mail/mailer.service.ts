@@ -71,7 +71,7 @@ export class MailerService {
         <small style="color: #9ca3af;">This invitation expires in 7 days</small>
       </div>
     `;
-console.log(`${process.env.SMTP_USER!}`);
+
     try {
       await this.transporter.sendMail({
         from: `"Acme Inc" <${process.env.SMTP_USER}>`,

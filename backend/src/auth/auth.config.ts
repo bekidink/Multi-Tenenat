@@ -50,6 +50,7 @@ export const auth = betterAuth({
     'http://localhost:3001',
     'http://localhost:7000',
     process.env.FRONT_END_URL!,
+    'https://acme-takehome.onrender.com',
   ],
   emailAndPassword: { enabled: true },
   session: { expiresIn: 60 * 60 * 24 * 7 },
