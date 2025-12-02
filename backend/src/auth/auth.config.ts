@@ -46,18 +46,28 @@ export const member = ac.newRole({
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
-  trustedOrigins: [
-  
-    
-    'https://acme-takehome.onrender.com',
-    
-  ],
+  trustedOrigins: ['*'],
   emailAndPassword: { enabled: true },
-  session: { expiresIn: 60 * 60 * 24 * 7 },
-  debug: process.env.NODE_ENV === 'development',
+  session: {
+    expiresIn: 60 * 60 * 24 * 7,
+    cookie: {
+      sameSite: 'none',
+      secure: true, // Required by browsers
+      httpOnly: true,
+      path: '/',
+    },
+    insecureDevMode: true,
+  },
+
+  debug: true,
 
   // Custom logger (if supported in your version)
-  Logger: authLogger,
+  Logger: {
+    info: (msg, meta) => console.log('[BetterAuth]', msg, meta || ''),
+    error: (msg, meta) => console.error('[BetterAuth] ERROR', msg, meta || ''),
+    warn: (msg, meta) => console.warn('[BetterAuth] WARN', msg, meta || ''),
+    debug: (msg, meta) => console.debug('[BetterAuth] DEBUG', msg, meta || ''),
+  },
   databaseHooks: {
     session: {
       create: {

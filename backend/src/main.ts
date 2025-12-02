@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 
 dotenv.config({ path: '.env' });
@@ -11,20 +12,20 @@ async function bootstrap() {
   });
 
  
-    app.enableCors({
-      origin: [
-        'http://localhost:3000',
-        'http://localhost:5001',
-        'http://localhost:7000',
-        'https://acme-backend-jl77.onrender.com',
-        'https://acme-takehome.onrender.com',
-        'http://10.30.167.157:7000',
-      ],
-      credentials: true,
-      
-    });
+   app.enableCors({
+     origin: [
+       'http://localhost:7000',
+       'http://10.30.167.157:7000',
+       'http://192.168.2.16:7000',
+     ],
+     credentials: true,
+     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+     allowedHeaders: ['Content-Type', 'Authorization',  'Origin'],
+     exposedHeaders: ['Set-Cookie'],
+   });
 
-   app.setGlobalPrefix('api/v1'); // ← THIS WAS MISSING — THEIR FRONTEND EXPECTS /api/...
+  //  app.setGlobalPrefix('api/v1'); // ← THIS WAS MISSING — THEIR FRONTEND EXPECTS /api/...
+app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({
