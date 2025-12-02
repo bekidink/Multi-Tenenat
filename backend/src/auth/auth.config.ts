@@ -47,7 +47,7 @@ export const member = ac.newRole({
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
   trustedOrigins: [
-    'http://localhost:3000',
+    'http://localhost:5001',
     'http://localhost:7000',
     process.env.FRONT_END_URL!,
     'https://acme-takehome.onrender.com',
