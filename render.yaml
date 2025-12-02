@@ -21,7 +21,7 @@ services:
       npm run build
       
     startCommand: cd backend && npm run start:prod
-    healthCheckPath: /health
+    
     envVars:
       - key: DATABASE_URL
         generateValue: true
