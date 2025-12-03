@@ -17,10 +17,11 @@ async function bootstrap() {
        'http://localhost:7000',
        'http://10.30.167.157:7000',
        'http://192.168.2.16:7000',
+       'https://acme-takehome.onrender.com',
      ],
      credentials: true,
      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-     allowedHeaders: ['Content-Type', 'Authorization',  'Origin'],
+     allowedHeaders: ['Content-Type', 'Authorization', 'Origin'],
      exposedHeaders: ['Set-Cookie'],
    });
 
